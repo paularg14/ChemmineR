@@ -1,1 +1,34 @@
+---
+title:   
+   _ChemmineR_
+   
+   ![](INPUT/IMAGES/Unknown.jpeg.png){width='400px'}
+   
+subtitle: |
+  Fuentes de datos Biomédicas y Web semántica  
+    
+  Grado de Ingeniería de la Salud 
+  
+author:  | 
+  | **Paula Rastrilla** *[email](mailto:prg1006@alu.ubu.es)*.
+date: "`r format(Sys.time(),'%d %B, %Y')`"
+
+Nota: puede consultarse más información sobre Chemmine [aquí](https://chemminetools.ucr.edu)
+
+output: 
+  html_document:
+    df_print: paged
+    theme: journal
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
+always_allow_html: true
+---
+<style>
+body {
+text-align: justify}
+</style>
+
+------------------------------------------------------------------------
 
