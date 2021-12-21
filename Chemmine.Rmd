@@ -31,4 +31,25 @@ text-align: justify}
 </style>
 
 ------------------------------------------------------------------------
+# 1. Introducción, objetivos y justificación
+
+#### **Introducción**
+
+A lo largo de este seminario, se pretende conocer las funciones del paquete ***ChemmineR*** como parte de **BiocManager**.
+
+
+#### **Objetivos**
+
+
+
+#### **Justificación del tema**
+
+# 2. Instalación de paquetes y carga de datos
+
+## 2.1 Instalación de paquetes
+
+## 2.2 Carga de datos 
+
+Los archivos SDF se utilizan para almacenar bases de datos en un formato estructurado. Se trata de una extensión de archivo estándar o genérica no asociada con ningún programa ni versión de base de datos. Por tanto, estos archivos pueden importarse y exportarse fácilmente con numerosos programas de base de datos.
+
 
