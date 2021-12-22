@@ -63,6 +63,22 @@ bondblock(sdfset[[1]])[1:5,] #Muestra los 5 primeros enlaces atómicos de la pri
 datablock(sdfset[[1]])[1:4]  #Muestra los primeros 4 datos sobre la primera molécula
 sdfid(sdfset)[1:6] # Muestra solo los IDs dentro del cabecero, de las seis primeras moléculas
 
+#Pueden convertirse los datos a una matriz
+dedatablockamatriz <- datablock2ma (datablocklist = datablock(sdfset))
+
+#Se divide la matriz en numéricos y caracteres, y se selecciona parte para ver los resultados
+numchar <- splitNumChar(dedatablockamatriz) 
+numchar[[1]][1:2,1:2]  
+numchar[[2]][1:2,10:11] 
+
+#Se juntan en un dataframa los valores de frecuencia atómica, masa molecular y fórmula atómica
+propma <- data.frame(MF = MF(sdfset), MW = MW(sdfset), atomcountMA(sdfset))
+propma[1:3, ] 
+
+#Con la función plot se obtiene la visualización de la estructura molecular
+plot(sdfset[1:4], print=FALSE) 
+
+
 #El sdfset no acepta operaciones del paquete dplyr, por lo que para operar sobre el set de datos 
 #este debería cambiarse de formato
 
@@ -72,5 +88,101 @@ PequeñasMoléculas <- read.delim("INPUT/DATA/SmallMolecules.csv", sep = ";")
 PequeñasMoléculas
 
 summary(PequeñasMoléculas)
+
+# Una vez observadas las columnas disponibles, se seleccionan aquellas con las que 
+#se va a trabajar, renombrándolas
+
+#Dado que en la columna ChEMBL.ID solo nos interesa el código numérico, se va a 
+#eliminar de cada fila las letras mediante el método substring
+
+DatosMoleculares <- PequeñasMoléculas %>%
+  select(ChEMBL.ID, Molecular.Weight, Polar.Surface.Area, CX.Acidic.pKa, CX.Basic.pKa, Aromatic.Rings, Molecular.Species, Molecular.Formula) %>%
+  rename(ID = ChEMBL.ID, Peso_Molecular = Molecular.Weight, Superficie = Polar.Surface.Area, pKa_Acido = CX.Acidic.pKa, pKa_Basico = CX.Basic.pKa, Anillos = Aromatic.Rings, Tipo_Molecula = Molecular.Species, Formula_Molecular = Molecular.Formula ) %>%
+  mutate(ID = substr(ID, 7, 14))
+DatosMoleculares
+
+#Con esta tabla se va a trabajar para seleccionar las moléculas que cumplan ciertos criterios
+
+#Se seleccionan las moléculas grandes, que cuenten con varios anillos y que sean neutras en cuanto
+#a cargas atómicas
+
+Moleculas_Grandes <- DatosMoleculares %>% 
+  filter(Peso_Molecular >= 530.00, Anillos >= 4, Tipo_Molecula == "NEUTRAL")
+
+Moleculas_Grandes
+
+#Se van a agrupar los pesos moleculares para reducir el número de filas y poder trabajar con ellas
+#más fácilmente
+
+
+pesoMol_numAnillos0 <- DatosMoleculares %>%
+  filter(Anillos == 0) %>%
+  mutate(Peso_Promedio = mean(Peso_Molecular, na.rm = TRUE)) %>%
+  select(Peso_Promedio, Anillos)
+
+sinAnillos <- distinct(pesoMol_numAnillos0)
+
+sinAnillos
+
+pesoMol_numAnillos1 <- DatosMoleculares %>%
+  filter(Anillos == 1) %>%
+  mutate(Peso_Promedio = mean(Peso_Molecular, na.rm = TRUE)) %>%
+  select(Peso_Promedio, Anillos)
+
+unAnillo <- distinct(pesoMol_numAnillos1)
+
+unAnillo
+
+pesoMol_numAnillos2 <- DatosMoleculares %>%
+  filter(Anillos == 2) %>%
+  mutate(Peso_Promedio = mean(Peso_Molecular, na.rm = TRUE)) %>%
+  select(Peso_Promedio, Anillos)
+
+dosAnillos <- distinct(pesoMol_numAnillos2)
+
+dosAnillos
+
+pesoMol_numAnillos3 <- DatosMoleculares %>%
+  filter(Anillos == 3) %>%
+  mutate(Peso_Promedio = mean(Peso_Molecular, na.rm = TRUE)) %>%
+  select(Peso_Promedio, Anillos)
+
+tresAnillos <- distinct(pesoMol_numAnillos3)
+
+tresAnillos
+
+pesoMol_numAnillos4 <- DatosMoleculares %>%
+  filter(Anillos == 4) %>%
+  mutate(Peso_Promedio = mean(Peso_Molecular, na.rm = TRUE)) %>%
+  select(Peso_Promedio, Anillos)
+
+cuatroAnillos <- distinct(pesoMol_numAnillos4)
+
+cuatroAnillos
+
+pesoMol_numAnillos5 <- DatosMoleculares %>%
+  filter(Anillos == 5) %>%
+  mutate(Peso_Promedio = mean(Peso_Molecular, na.rm = TRUE)) %>%
+  select(Peso_Promedio, Anillos)
+
+cincoAnillos <- distinct(pesoMol_numAnillos5)
+
+cincoAnillos
+
+#Se crea una tabla que contengan las anteriores y se muestra una gráfica, para evaluar si hay
+#relación entre el número de anillos de una molécula y su peso molecular
+
+AnillosPeso = data.frame(rbind(sinAnillos, unAnillo, dosAnillos, tresAnillos, cuatroAnillos, cincoAnillos))
+
+AnillosPeso
+
+#Se representan de forma simple con plot. 
+plot(AnillosPeso)
+
+#A simple vista parece que existe una correlación pero esto se debe al formato de la gráfica
+
+#No existe relación entre el peso molecular y los anillos que tenga un compuesto
+
+
 
 
